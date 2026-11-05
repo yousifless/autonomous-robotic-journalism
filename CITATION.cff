@@ -1,0 +1,37 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite the paper below."
+title: "Autonomous Robotic Journalism (ROS 2 implementation)"
+version: 1.0.0
+license: Apache-2.0
+authors:
+  - family-names: Youssef
+    given-names: Ahmed
+    affiliation: University of Padova
+  - family-names: Bezerra
+    given-names: Ranulfo
+    affiliation: Tohoku University
+  - family-names: Alemayoh
+    given-names: Tsige Tadesse
+    affiliation: Tohoku University
+  - family-names: Kojima
+    given-names: Shotaro
+    affiliation: Tohoku University
+  - family-names: Ohno
+    given-names: Kazunori
+    affiliation: Tohoku University
+preferred-citation:
+  type: conference-paper
+  title: "Autonomous Robotic Journalism: A Newsworthiness-Driven System for Active Data Collection and Content Generation"
+  authors:
+    - family-names: Youssef
+      given-names: Ahmed
+    - family-names: Bezerra
+      given-names: Ranulfo
+    - family-names: Alemayoh
+      given-names: Tsige Tadesse
+    - family-names: Kojima
+      given-names: Shotaro
+    - family-names: Ohno
+      given-names: Kazunori
+  collection-title: "IEEE/SICE International Symposium on System Integration (SII)"
+  year: 2027

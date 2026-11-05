@@ -1,0 +1,29 @@
+# Python dependencies of the GPU-side nodes (install with: python3 -m pip install -r requirements.txt).
+# ROS 2 itself, rclpy, numpy and OpenCV come from the ROS 2 / apt installation (python3-opencv).
+#
+# VideoLLaMA3 loads remote code that was published against transformers 4.46.x; newer versions may need
+# adjustments. Pin versions in your own environment once it works.
+
+torch>=2.1
+torchvision
+transformers==4.46.3
+accelerate>=0.33
+bitsandbytes>=0.43          # 4-bit loading of DeepSeek-R1 and LLaVA-Interleave
+sentence-transformers>=2.7
+pillow
+numpy<2                     # apt python3-opencv on Ubuntu 22.04 is built against NumPy 1.x
+
+# VideoLLaMA3 video decoding
+decord
+imageio
+ffmpeg-python
+
+# Evaluation
+language-tool-python        # grammar signal (needs Java); falls back to a heuristic if unavailable
+
+# Web UI
+flask>=2.3
+
+# Optional
+pyttsx3                     # audio version of the article (speech_output_enabled)
+# flash-attn                # install separately: pip install flash-attn --no-build-isolation

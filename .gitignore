@@ -1,0 +1,21 @@
+# colcon
+build/
+install/
+log/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+
+# Run outputs and model caches
+journalist_robot_runs/
+*.mp4
+hf_cache/
+*.pt
+*.onnx
+*.safetensors
+.ruff_cache/

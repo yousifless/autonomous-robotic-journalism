@@ -1,0 +1,58 @@
+You are in [SCENARIO DESCRIPTION]. Your mission is to [MISSION OBJECTIVE].
+
+NEWSWORTHINESS RUBRIC (0.0-1.0):
+- HIGH (0.7-1.0): [HIGH PRIORITY TARGETS AND ACTIVITIES]
+- MEDIUM (0.4-0.7): [MEDIUM PRIORITY TARGETS AND ACTIVITIES]
+- LOW (0.0-0.4): [LOW PRIORITY OR IGNORE THESE]
+
+PRIORITY TARGETS (in order of importance):
+1. [PRIMARY TARGET]: [Description of what to look for]
+2. [SECONDARY TARGET]: [Description of what to look for]
+3. [TERTIARY TARGET]: [Description of what to look for]
+4. [EXPLORATION TARGET]: [Description of what to look for]
+
+EXPLORATION STRATEGY:
+- [Strategy for finding targets]
+- [How to approach different areas]
+- [What to focus on during exploration]
+
+MOVEMENT BEHAVIOR:
+- [General movement instructions]
+- [How to navigate the environment]
+- [When to move vs when to rotate]
+
+TARGET MOVEMENT PRIORITIES:
+- [PRIMARY TARGET]: When you see [primary target], MOVE FORWARD toward them (this is your primary target)
+- [SECONDARY TARGET]: When you see [secondary target], MOVE FORWARD to approach them
+- ONLY ROTATE if the path is blocked or unsafe - otherwise, move directly toward targets
+- PRIORITY ORDER: [Primary target] > [Secondary target] > [Tertiary target]
+- Do not rotate away from targets unless the path is blocked
+
+[SPECIFIC DETECTION FOCUS]:
+- [What to look for specifically]
+- [How to identify targets]
+- [What behaviors indicate targets]
+
+IGNORE THESE:
+- [What to ignore]
+- [What not to focus on]
+- [Non-target items]
+
+SAFETY CONSIDERATIONS:
+- [Safety guidelines]
+- [Distance requirements]
+- [What to avoid]
+
+EXPLORATION PRIORITIES:
+1. First priority: [Primary exploration goal]
+2. Second priority: [Secondary exploration goal]
+3. Third priority: [Tertiary exploration goal]
+4. Fourth priority: [Additional exploration goal]
+
+Your goal is to [FINAL MISSION STATEMENT] through strategic exploration and careful observation, while [SAFETY/ETHICAL CONSIDERATIONS].
+
+
+
+
+
+

@@ -1,0 +1,120 @@
+# Default parameters of the autonomous robotic journalism system.
+#
+# Values marked [paper] are the settings reported in the SII 2027 paper.
+# Everything else is an implementation setting of this release.
+# To change a value, copy this file, edit the copy and pass it to the launch file:
+#   ros2 launch journalist_robot journalist_system.launch.py params_file:=/path/to/my_params.yaml
+# (Only the launch arguments listed by `ros2 launch journalist_robot journalist_system.launch.py -s`
+#  can be set directly on the command line.)
+# Write floating-point values with a decimal point (10.0, not 10): ROS 2 parameters are typed.
+
+perception_controller:
+  ros__parameters:
+    # --- I/O ---------------------------------------------------------------
+    front_image_topic: /front_camera/image_raw/compressed
+    image_transport: compressed          # compressed | raw
+    rotate_180: false                    # set true if the camera is mounted upside down
+    cmd_vel_topic: /cmd_vel
+    max_frame_age_s: 3.0                 # stop the base if the newest camera frame is older than this
+    autonomy_enabled: true               # can also be toggled on /journalist/autonomy_enable
+    save_decision_frames: true
+
+    # --- Decision loop -----------------------------------------------------
+    decision_period_s: 2.0               # [paper] ~2 s windows
+    decision_window_s: 2.0
+    frames_per_decision: 4               # frames sampled from the window for VideoLLaMA3
+    model_frame_width: 1280              # frames are resized to this width before inference
+    cmd_publish_rate_hz: 10.0            # last command is re-sent at this rate
+    deadman_timeout_s: 5.0               # no valid decision for this long -> zero velocity
+
+    # --- Velocity limits (applied after the policy) -------------------------
+    max_linear: 0.4                      # [paper] v <= 0.4 m/s
+    max_angular: 0.5                     # [paper] |omega| <= 0.5 rad/s
+    turn_cooldown_s: 1.0
+    allow_reverse: false                 # decisions see only the front camera, so reversing is blind
+
+    # --- Newsworthiness, Eq. (1) --------------------------------------------
+    newsworthiness_weights: [0.4, 0.4, 0.2]   # [paper] w1 (intrinsic), w2 (brief), w3 (novelty)
+    use_clip_newsworthiness: true        # false -> N_t = S_news only
+    novelty_buffer_size: 8               # views kept in the short-term buffer B_t
+    brief_similarity_range: [0.15, 0.35] # raw CLIP similarity mapped linearly to [0, 1]
+
+    # --- Recording trigger (hysteresis) -------------------------------------
+    start_newsworthiness: 0.7            # [paper] start when N_t >= 0.7 ...
+    start_confidence: 0.8                # [paper] ... and c_t >= 0.8
+    stop_newsworthiness: 0.3             # [paper] stop when N_t < 0.3 ...
+    stop_confidence: 0.5                 # [paper] ... and c_t < 0.5
+    max_segment_duration_s: 0.0          # 0 disables the time limit
+
+    feedback_ttl_s: 10.0                 # journalist feedback stays in the prompt this long
+
+    # --- Models --------------------------------------------------------------
+    controller_model_id: DAMO-NLP-SG/VideoLLaMA3-7B
+    clip_model_id: openai/clip-vit-base-patch32
+    use_flash_attention: true
+    max_new_tokens: 256
+    local_files_only: false              # true = never download, use the local HF cache
+
+capture_manager:
+  ros__parameters:
+    front_image_topic: /front_camera/image_raw/compressed
+    rear_image_topic: /rear_camera/image_raw/compressed
+    image_transport: compressed
+    rotate_180: false
+    use_rear_camera: true
+    rear_max_age_s: 2.0                  # rear frame older than this -> front view only
+    capture_fps: 8.0
+    pre_event_s: 10.0                    # [paper] ~10 s pre-event context window
+    jpeg_quality: 90
+
+journalist:
+  ros__parameters:
+    # --- Semantic frame selection -------------------------------------------
+    selection_enabled: true
+    similarity_threshold: 0.87           # [paper] Table I: 87 % CLIP similarity threshold
+    min_selection_interval_s: 0.4
+    batch_size: 8                        # [paper] batches of 8 frames
+    description_max_new_tokens: 1800
+    max_pending_batches: 32              # description backlog bound (memory); excess batches are not described
+
+    # --- Captured-view check -> feedback to the controller -------------------
+    view_check_enabled: true
+    view_check_every_n_batches: 1
+
+    # --- Article -----------------------------------------------------------
+    article_min_words: 800
+    article_max_words: 1000
+    writer_max_new_tokens: 8192          # DeepSeek-R1 reasoning trace + article
+    writer_max_evidence_chars: 60000     # longer evidence is thinned out evenly before writing
+
+    # --- Internal acceptance, Eq. (4) ----------------------------------------
+    evaluation_enabled: true
+    acceptance_weights: [0.35, 0.25, 0.20, 0.20]   # [paper] factuality, relevance, consistency, language
+    acceptance_threshold: 0.85           # [paper] S >= 0.85
+    max_rewrites: 2                      # bound on revisions before the draft is left for a human editor
+    max_key_frames: 16                   # frames used by the evaluation signals
+    language_tool_url: ""                # e.g. http://localhost:8081 ; empty = local LanguageTool
+
+    # --- Audio (optional) -----------------------------------------------------
+    audio_enabled: false                 # requires audio_common_msgs and a microphone node
+    audio_topic: /audio/audio
+    audio_sample_rate: 16000
+    audio_channels: 1
+    asr_model_id: openai/whisper-small
+    asr_chunk_s: 10.0
+
+    # --- Outputs -------------------------------------------------------------
+    speech_output_enabled: false         # write article.wav with pyttsx3
+    ui_enabled: true
+    ui_host: 127.0.0.1                   # use 0.0.0.0 only on a trusted network
+    ui_port: 8890
+    shutdown_grace_s: 180.0
+
+    # --- Models --------------------------------------------------------------
+    clip_model_id: openai/clip-vit-base-patch32
+    describer_model_id: llava-hf/llava-interleave-qwen-7b-hf
+    describer_4bit: true
+    writer_model_id: deepseek-ai/DeepSeek-R1-Distill-Qwen-32B
+    writer_4bit: true
+    use_flash_attention: true
+    local_files_only: false
